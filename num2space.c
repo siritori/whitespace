@@ -5,11 +5,8 @@
 
 static int _num2space(const int num, char *ret) {
    int idx;
-   if(num == 1) {
-      ret[0] = '\t';
-      return 1;
-   } else if(num == 0) {
-      ret[0] = ' ';
+   if(num == 1 || num == 0) {
+      ret[0] = (num == 1)?'\t':' ';
       return 1;
    }
    idx = _num2space(num/2, ret);
@@ -29,21 +26,12 @@ char* num2space(const int num) {
    return ret;
 }
 
-static int _space2num(const char *p, int *ret) {
-   int cardinal_num;
-   if(*(p+1) == '\n') {
-      *ret += (*p == '\t')?1:0;
-      return 2;
-   }
-   cardinal_num = _space2num(p+1, ret);
-   *ret += (*p == '\t')? cardinal_num : 0;
-   return cardinal_num * 2;
+static int _space2num(const char *p, int ret) {
+   if(*p == '\n') return ret;
+   return _space2num(p + 1, 2 * ret + ((*p == '\t')?1:0));
 }
 
 int space2num(const char *p) {
-   int cardinal_num;
-   int ret = 0;
-   cardinal_num = _space2num(p, &ret);
-   return ret;
+   return _space2num(p, 0);
 }
 
