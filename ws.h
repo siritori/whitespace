@@ -49,3 +49,10 @@ typedef struct __INSTRUCTION {
    int param;
 } INSTRUCTION;
 
+/* num2space.c */
+char* num2space(const int num); // encoded WhiteSpace-style byte string
+int   space2num(const char *p); // decoded normal number
+
+//* lexer.c */
+//INSTRUCTION* lexcal_analysis(FILE *fp);
+
