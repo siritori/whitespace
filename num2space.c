@@ -47,23 +47,3 @@ int space2num(const char *p) {
    return ret;
 }
 
-int main(int argc, char *argv[]) {
-   int i;
-   char *ret = num2space(atoi(argv[1]));
-   for(i = 0; i < MAX_NUM_ARRAY_SIZE; ++i) {
-      switch(ret[i]) {
-      case '\t': putchar('1'); break;
-      case ' ' : putchar('0'); break;
-      case '\n': goto LOOP_END;
-      default  :
-         fprintf(stderr, "FATAL ERROR: Illegal char '%c'\n", ret[i]);
-         exit(EXIT_FAILURE);
-      }
-   }
-LOOP_END:
-   putchar('\n');
-   printf("%d\n", space2num(ret));
-   free(ret);
-   return 0;
-}
-
