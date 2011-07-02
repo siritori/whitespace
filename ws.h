@@ -20,7 +20,7 @@ enum CMD_TYPE {
    /* IMP_STACK */
    CMD_PSH, // push the number onto the stack
    CMD_DUP, // duplicate the top item on the stack
-   CMD_CPY, // copy the Nth item on the stack onto the top of the stack
+   CMD_CPY, // copy the Nth item on the stack onto the stack top
    CMD_SWP, // swap the top two items on the stack
    CMD_DSC, // discard the top item on the stack
    CMD_SLD, // slide N items off the stack, keeping the top item
@@ -37,11 +37,27 @@ enum CMD_TYPE {
    CMD_LBL, // mark a location in the program
    CMD_JAL, // call subroutine
    CMD_JMP, // jump unconditionally to a label
-   CMD_JSZ, // jump to a label if the top of the stack is zero
-   CMD_JSN, // jump to a label if the top of the stack is negative
+   CMD_JSZ, // jump to a label if the stack top is zero
+   CMD_JSN, // jump to a label if the stack top is negative
    CMD_RET, // end a subroutine and transfer control back to the caller
-   CMD_END  // end of the program
+   CMD_END, // end of the program
+   /* IMP_IO */
+   CMD_PCH, // output the character at the stack top
+   CMD_PNM, // output the number at the end of the stack
+   CMD_GCH, // read a character and place it in the location(the stack top)
+   CMD_GNM  // read a number and place it in the location(the stack top)
 };
+
+#define IS_REQUIRE_PARAM(CMD) (\
+      CMD == CMD_PUT\
+   || CMD == CMD_CPY\
+   || CMD == CMD_SLD\
+   || CMD == CMD_LBL\
+   || CMD == CMD_JAL\
+   || CMD == CMD_JMP\
+   || CMD == CMD_JSZ\
+   || CMD == CMD_JSN\
+)
 
 typedef struct __INSTRUCTION {
    enum IMP_TYPE imp_t;
