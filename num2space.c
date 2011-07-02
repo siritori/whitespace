@@ -33,6 +33,26 @@ char* num2space(const int num) {
    return ret;
 }
 
+static int _space2num(const char *p, int *ret) {
+   int cardinal_num;
+   if(*(p+1) == '\n') {
+      printf("%d += %d\n", *ret, (*p=='\t')?1:0);
+      *ret += (*p == '\t')?1:0;
+      return 2;
+   }
+   cardinal_num = _space2num(p+1, ret);
+   printf("%d += %d\n", *ret, cardinal_num * ((*p == '\t')?1:0));
+   *ret += cardinal_num * ((*p == '\t')?1:0);
+   return cardinal_num * 2;
+}
+
+int space2num(const char *p) {
+   int cardinal_num;
+   int ret = 0;
+   cardinal_num = _space2num(p, &ret);
+   return ret;
+}
+
 int main(int argc, char *argv[]) {
    int i;
    char *ret = num2space(atoi(argv[1]));
@@ -46,8 +66,10 @@ int main(int argc, char *argv[]) {
          exit(EXIT_FAILURE);
       }
    }
-   free(ret);
 LOOP_END:
+   putchar('\n');
+   printf("%d\n", space2num(ret));
+   free(ret);
    return 0;
 }
 
