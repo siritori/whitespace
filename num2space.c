@@ -6,16 +6,13 @@
 static int _num2space(const int num, char *ret) {
    int idx;
    if(num == 1) {
-      printf("[0] = 1\n");
       ret[0] = '\t';
       return 1;
    } else if(num == 0) {
-      printf("[0] = 0\n");
       ret[0] = ' ';
       return 1;
    }
    idx = _num2space(num/2, ret);
-   printf("[%d] = %d\n", idx, num%2);
    ret[idx] = (num % 2 == 1)?'\t':' ';
    return idx+1;
 }
@@ -28,7 +25,6 @@ char* num2space(const int num) {
       exit(EXIT_FAILURE);
    }
    idx = _num2space(num, ret);
-   printf("[%d] = '\\n'\n", idx);
    ret[idx] = '\n';
    return ret;
 }
@@ -36,13 +32,11 @@ char* num2space(const int num) {
 static int _space2num(const char *p, int *ret) {
    int cardinal_num;
    if(*(p+1) == '\n') {
-      printf("%d += %d\n", *ret, (*p=='\t')?1:0);
       *ret += (*p == '\t')?1:0;
       return 2;
    }
    cardinal_num = _space2num(p+1, ret);
-   printf("%d += %d\n", *ret, cardinal_num * ((*p == '\t')?1:0));
-   *ret += cardinal_num * ((*p == '\t')?1:0);
+   *ret += (*p == '\t')? cardinal_num : 0;
    return cardinal_num * 2;
 }
 
