@@ -16,7 +16,7 @@ static int _num2space(const int num, char *ret) {
 
 char* num2space(const int num) {
    int idx;
-   char *ret = (char*)malloc(sizeof(int) * CHAR_BIT);
+   char *ret = (char*)malloc(sizeof(int) * CHAR_BIT + 1);
    if(ret == NULL) {
       fprintf(stderr, "FATAL ERROR: Failed to allocate memory.\n");
       exit(EXIT_FAILURE);
