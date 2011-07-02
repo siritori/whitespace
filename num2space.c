@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #define MAX_NUM_ARRAY_SIZE (sizeof(int) * CHAR_BIT)
 
-int _num2space(int num, char *ret) {
+static int _num2space(const int num, char *ret) {
    int idx;
    if(num == 1) {
       printf("[0] = 1\n");
@@ -20,7 +20,7 @@ int _num2space(int num, char *ret) {
    return idx+1;
 }
 
-char* num2space(int num) {
+char* num2space(const int num) {
    int idx;
    char *ret = (char*)malloc(sizeof(int) * CHAR_BIT);
    if(ret == NULL) {
