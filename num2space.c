@@ -7,7 +7,7 @@ char* num2space(int num) {
    int i;
    char *ret = (char*)malloc(MAX_NUM_ARRAY_SIZE);
    if(ret == NULL) {
-      fprintf(stderr, "FATAL ERRPR: failed to allocate memory.\n");
+      fprintf(stderr, "FATAL ERROR: failed to allocate memory.\n");
       exit(EXIT_FAILURE);
    }
    for(i = 0; i < MAX_NUM_ARRAY_SIZE; ++i) {
