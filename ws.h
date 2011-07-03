@@ -50,7 +50,7 @@ enum CMD_TYPE {
    CMD_GNM  // read a number and place it in the location(the stack top)
 };
 
-#define IS_REQUIRE_PARAM(CMD) (\
+#define REQUIRE_PARAM(CMD) (\
       CMD == CMD_PUT\
    || CMD == CMD_CPY\
    || CMD == CMD_SLD\

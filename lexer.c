@@ -213,6 +213,9 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
       case CMD_GCH : puts("CMD_GCH"); break;
       case CMD_GNM : puts("CMD_GNM"); break;
       }
+      if(REQUIRE_PARAM(cmd_t)) {
+         puts("param");
+      }
       if(imp_t == IMP_FLOW_CTRL && cmd_t == CMD_END) break;
    }
    return text;
