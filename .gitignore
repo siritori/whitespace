@@ -1,3 +1,5 @@
+ws
+a.*
 *.o
 *.wb
 OMake*
