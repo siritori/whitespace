@@ -169,7 +169,7 @@ static enum CMD_TYPE read_cmd(FILE *fp, const enum IMP_TYPE imp_t) {
    }
 }
 
-int read_param(FILE *fp) {
+static int read_param(FILE *fp) {
    int i;
    char ch;
    char temp[MAX_NUM_ARRAY_SIZE];
@@ -204,7 +204,7 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
    }
    return text;
 }
-
+/*
 int main(int argc, char *argv[]) {
    FILE *fp;
    INSTRUCTION *p, *text;
@@ -255,4 +255,5 @@ int main(int argc, char *argv[]) {
    free(text);
    return 0;
 }
+*/
 
