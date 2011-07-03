@@ -171,12 +171,13 @@ static enum CMD_TYPE read_cmd(FILE *fp, const enum IMP_TYPE imp_t) {
 
 int read_param(FILE *fp) {
    int i;
+   char ch;
    char temp[MAX_NUM_ARRAY_SIZE];
    for(i = 0; i < MAX_NUM_ARRAY_SIZE; ++i) {
-      char ch;
       if((ch = fgetc(fp)) == '\n') break;
       temp[i] = ch;
    }
+   temp[i] = ch;
    return space2num(temp);
 }
 
@@ -193,44 +194,39 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
       enum CMD_TYPE cmd_t;
       int param;
       imp_t = read_imp(fp);
-//      switch(imp_t) {
-//      case IMP_STACK       : puts("IMP_STACK");       break;
-//      case IMP_ARITHMETIC  : puts("IMP_ARITHMETIC");  break;
-//      case IMP_HEAP_ACCESS : puts("IMP_HEAP_ACCESS"); break;
-//      case IMP_FLOW_CTRL   : puts("IMP_FLOW_CTRL");   break;
-//      case IMP_IO          : puts("IMP_IO");          break;
-//      }
       cmd_t = read_cmd(fp, imp_t);
       switch(cmd_t) {
-      case CMD_PSH : puts("CMD_PSH"); break;
-      case CMD_DUP : puts("CMD_DUP"); break;
-      case CMD_CPY : puts("CMD_CPY"); break;
-      case CMD_SWP : puts("CMD_SWP"); break;
-      case CMD_DSC : puts("CMD_DSC"); break;
-      case CMD_SLD : puts("CMD_SLD"); break;
-      case CMD_ADD : puts("CMD_ADD"); break;
-      case CMD_SUB : puts("CMD_SUB"); break;
-      case CMD_MUL : puts("CMD_MUL"); break;
-      case CMD_DIV : puts("CMD_DIV"); break;
-      case CMD_MOD : puts("CMD_MOD"); break;
-      case CMD_PUT : puts("CMD_PUT"); break;
-      case CMD_GET : puts("CMD_GET"); break;
-      case CMD_LBL : puts("CMD_LBL"); break;
-      case CMD_JAL : puts("CMD_JAL"); break;
-      case CMD_JMP : puts("CMD_JMP"); break;
-      case CMD_JSZ : puts("CMD_JSZ"); break;
-      case CMD_JSN : puts("CMD_JSN"); break;
-      case CMD_RET : puts("CMD_RET"); break;
-      case CMD_END : puts("CMD_END"); break;
-      case CMD_PCH : puts("CMD_PCH"); break;
-      case CMD_PNM : puts("CMD_PNM"); break;
-      case CMD_GCH : puts("CMD_GCH"); break;
-      case CMD_GNM : puts("CMD_GNM"); break;
+      case CMD_PSH : printf("CMD_PSH"); break;
+      case CMD_DUP : printf("CMD_DUP"); break;
+      case CMD_CPY : printf("CMD_CPY"); break;
+      case CMD_SWP : printf("CMD_SWP"); break;
+      case CMD_DSC : printf("CMD_DSC"); break;
+      case CMD_SLD : printf("CMD_SLD"); break;
+      case CMD_ADD : printf("CMD_ADD"); break;
+      case CMD_SUB : printf("CMD_SUB"); break;
+      case CMD_MUL : printf("CMD_MUL"); break;
+      case CMD_DIV : printf("CMD_DIV"); break;
+      case CMD_MOD : printf("CMD_MOD"); break;
+      case CMD_PUT : printf("CMD_PUT"); break;
+      case CMD_GET : printf("CMD_GET"); break;
+      case CMD_LBL : printf("CMD_LBL"); break;
+      case CMD_JAL : printf("CMD_JAL"); break;
+      case CMD_JMP : printf("CMD_JMP"); break;
+      case CMD_JSZ : printf("CMD_JSZ"); break;
+      case CMD_JSN : printf("CMD_JSN"); break;
+      case CMD_RET : printf("CMD_RET"); break;
+      case CMD_END : printf("CMD_END"); break;
+      case CMD_PCH : printf("CMD_PCH"); break;
+      case CMD_PNM : printf("CMD_PNM"); break;
+      case CMD_GCH : printf("CMD_GCH"); break;
+      case CMD_GNM : printf("CMD_GNM"); break;
       }
       if(REQUIRE_PARAM(cmd_t)) {
          param = read_param(fp);
+         printf(" param : %d\n", param);
       } else {
          param = 0;
+         putchar('\n');
       }
 
       if(imp_t == IMP_FLOW_CTRL && cmd_t == CMD_END) break;
@@ -246,3 +242,4 @@ int main(int argc, char *argv[]) {
    free(text);
    return 0;
 }
+
