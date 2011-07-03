@@ -4,6 +4,7 @@
 #define DEFAULT_TEXT_SIZE 64
 #define MAX_NUM_ARRAY_SIZE (sizeof(int) * CHAR_BIT)
 #define SYMBOL_TABLE_SIZE 4271 // prime
+#define DEFAULT_OUT_FILE "a.wb"
 
 /*
    WhiteSpace Instruction format is this:
