@@ -206,8 +206,16 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
 }
 
 int main(int argc, char *argv[]) {
-   FILE *fp = fopen(argv[1], "rb");
+   FILE *fp;
    INSTRUCTION *p, *text;
+   if(argc < 2) {
+      fp = stdin;
+   } else {
+      if((fp = fopen(argv[1], "r")) == NULL) {
+         fprintf(stderr, "ERROR: Failed to open file '%s'\n", argv[1]);
+         exit(EXIT_FAILURE);
+      }
+   }
    text = lexcal_analysis(fp);
    for(p = text; p->cmd_t != CMD_END; ++p) {
       switch(p->cmd_t) {
