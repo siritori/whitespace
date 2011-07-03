@@ -169,6 +169,15 @@ static enum CMD_TYPE read_cmd(FILE *fp, const enum IMP_TYPE imp_t) {
    }
 }
 
+static int read_label(FILE *fp) {
+   char ch;
+   int ret = 0;
+   while((ch = fgetc(fp)) != '\n') {
+      ret = (ret * 3 + 31) + ((ch == '\t')? 2 : 5);
+   }
+   return ret;
+}
+
 static int read_param(FILE *fp) {
    int i;
    char ch;
@@ -195,7 +204,11 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
       int param;
       imp_t = read_imp(fp);
       cmd_t = read_cmd(fp, imp_t);
-      param = REQUIRE_PARAM(cmd_t)? read_param(fp): 0;
+      if(REQUIRE_PARAM(cmd_t)) {
+         param = (imp_t == IMP_FLOW_CTRL)? read_label(fp): read_param(fp);
+      } else {
+         param = -1;
+      }
       p->imp_t = imp_t;
       p->cmd_t = cmd_t;
       p->param = param;
