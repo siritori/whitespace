@@ -38,41 +38,41 @@ int main(int argc, char *argv[]) {
    }
    /* replace on symbol_table */
    for(p = text; p->cmd_t != CMD_END; ++p) {
-      switch(p->cmd_t) {
-      case CMD_PSH : printf("PSH"); break;
-      case CMD_DUP : printf("DUP"); break;
-      case CMD_CPY : printf("CPY"); break;
-      case CMD_SWP : printf("SWP"); break;
-      case CMD_DSC : printf("DSC"); break;
-      case CMD_SLD : printf("SLD"); break;
-      case CMD_ADD : printf("ADD"); break;
-      case CMD_SUB : printf("SUB"); break;
-      case CMD_MUL : printf("MUL"); break;
-      case CMD_DIV : printf("DIV"); break;
-      case CMD_MOD : printf("MOD"); break;
-      case CMD_PUT : printf("PUT"); break;
-      case CMD_GET : printf("GET"); break;
-      case CMD_JAL : printf("JAL"); break;
-      case CMD_JMP : printf("JMP"); break;
-      case CMD_JSZ : printf("JSZ"); break;
-      case CMD_JSN : printf("JSN"); break;
-      case CMD_RET : printf("RET"); break;
-      case CMD_END : printf("END"); break;
-      case CMD_PCH : printf("PCH"); break;
-      case CMD_PNM : printf("PNM"); break;
-      case CMD_GCH : printf("GCH"); break;
-      case CMD_GNM : printf("GNM"); break;
-      default:
-         break;
-      }
+//      switch(p->cmd_t) {
+//      case CMD_PSH : printf("PSH"); break;
+//      case CMD_DUP : printf("DUP"); break;
+//      case CMD_CPY : printf("CPY"); break;
+//      case CMD_SWP : printf("SWP"); break;
+//      case CMD_DSC : printf("DSC"); break;
+//      case CMD_SLD : printf("SLD"); break;
+//      case CMD_ADD : printf("ADD"); break;
+//      case CMD_SUB : printf("SUB"); break;
+//      case CMD_MUL : printf("MUL"); break;
+//      case CMD_DIV : printf("DIV"); break;
+//      case CMD_MOD : printf("MOD"); break;
+//      case CMD_PUT : printf("PUT"); break;
+//      case CMD_GET : printf("GET"); break;
+//      case CMD_JAL : printf("JAL"); break;
+//      case CMD_JMP : printf("JMP"); break;
+//      case CMD_JSZ : printf("JSZ"); break;
+//      case CMD_JSN : printf("JSN"); break;
+//      case CMD_RET : printf("RET"); break;
+//      case CMD_END : printf("END"); break;
+//      case CMD_PCH : printf("PCH"); break;
+//      case CMD_PNM : printf("PNM"); break;
+//      case CMD_GCH : printf("GCH"); break;
+//      case CMD_GNM : printf("GNM"); break;
+//      default:
+//         break;
+//      }
       if(p->imp_t == IMP_FLOW_CTRL && REQUIRE_PARAM(p->cmd_t)) {
          p->param = symbol_table[hash(p->param)];
       }
-      if(REQUIRE_PARAM(p->cmd_t)) {
-         printf(" %4d\n", p->param);
-      } else {
-         putchar('\n');
-      }
+//      if(REQUIRE_PARAM(p->cmd_t)) {
+//         printf(" %4d\n", p->param);
+//      } else {
+//         putchar('\n');
+//      }
    }
    for(p = text; p->cmd_t != CMD_END; ++p) {
       fwrite(p, 1, sizeof(INSTRUCTION), fp_out);
