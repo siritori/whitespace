@@ -1,0 +1,6 @@
+*.o
+*.wb
+OMake*
+.*
+.gitignore
+
