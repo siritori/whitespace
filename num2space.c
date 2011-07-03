@@ -1,7 +1,6 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX_NUM_ARRAY_SIZE (sizeof(int) * CHAR_BIT)
 
 static int _num2space(const int num, char *ret) {
    int idx;

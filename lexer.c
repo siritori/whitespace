@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "ws.h"
 
 static enum IMP_TYPE read_imp(FILE *fp) {
@@ -23,6 +24,7 @@ static enum IMP_TYPE read_imp(FILE *fp) {
       exit(EXIT_FAILURE);
    }
 }
+
 
 static enum CMD_TYPE read_stack_cmd(FILE *fp) {
    char ch;
@@ -167,6 +169,17 @@ static enum CMD_TYPE read_cmd(FILE *fp, const enum IMP_TYPE imp_t) {
    }
 }
 
+int read_param(FILE *fp) {
+   int i;
+   char temp[MAX_NUM_ARRAY_SIZE];
+   for(i = 0; i < MAX_NUM_ARRAY_SIZE; ++i) {
+      char ch;
+      if((ch = fgetc(fp)) == '\n') break;
+      temp[i] = ch;
+   }
+   return space2num(temp);
+}
+
 INSTRUCTION* lexcal_analysis(FILE *fp) {
    INSTRUCTION *p;
    INSTRUCTION *text = (INSTRUCTION*)malloc(sizeof(INSTRUCTION) * DEFAULT_TEXT_SIZE);
@@ -178,6 +191,7 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
    while(1) {
       enum IMP_TYPE imp_t;
       enum CMD_TYPE cmd_t;
+      int param;
       imp_t = read_imp(fp);
 //      switch(imp_t) {
 //      case IMP_STACK       : puts("IMP_STACK");       break;
@@ -214,8 +228,11 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
       case CMD_GNM : puts("CMD_GNM"); break;
       }
       if(REQUIRE_PARAM(cmd_t)) {
-         puts("param");
+         param = read_param(fp);
+      } else {
+         param = 0;
       }
+
       if(imp_t == IMP_FLOW_CTRL && cmd_t == CMD_END) break;
    }
    return text;
