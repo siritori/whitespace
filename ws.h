@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define DEFAULT_TEXT_SIZE 64
+
 /*
    WhiteSpace Instruction format is this:
    IMP COMMAND [PARAM]
@@ -70,5 +72,5 @@ char* num2space(const int num); // encoded WhiteSpace-style byte string
 int   space2num(const char *p); // decoded normal number
 
 //* lexer.c */
-//INSTRUCTION* lexcal_analysis(FILE *fp);
+INSTRUCTION* lexcal_analysis(FILE *fp);
 
