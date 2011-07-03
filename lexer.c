@@ -218,6 +218,13 @@ int main(int argc, char *argv[]) {
    }
    text = lexcal_analysis(fp);
    for(p = text; p->cmd_t != CMD_END; ++p) {
+      switch(p->imp_t) {
+      case IMP_STACK       : printf("%16s ", "IMP_STACK");        break;
+      case IMP_ARITHMETIC  : printf("%16s ", "IMP_ARITHMETIC");   break;
+      case IMP_HEAP_ACCESS : printf("%16s ", "IMP_HEAP_ACCESS");  break;
+      case IMP_FLOW_CTRL   : printf("%16s ", "IMP_FLOW_CTRL");    break;
+      case IMP_IO          : printf("%16s ", "IMP_IO");           break;
+      }
       switch(p->cmd_t) {
       case CMD_PSH : printf("PSH"); break;
       case CMD_DUP : printf("DUP"); break;
