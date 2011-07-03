@@ -9,17 +9,34 @@ int hash(int num) {
 }
 
 int main(int argc, char *argv[]) {
-   FILE *fp;
+   FILE *fp_in, *fp_out;
    INSTRUCTION *p, *text;
-   if(argc < 2) {
-      fp = stdin;
-   } else {
-      if((fp = fopen(argv[1], "r")) == NULL) {
+
+   /* open stream */
+   fp_in = stdin;
+   if(argc == 2) {
+      if((fp_out = fopen(argv[1], "wb")) == NULL) {
          fprintf(stderr, "ERROR: Failed to open file '%s'\n", argv[1]);
          exit(EXIT_FAILURE);
       }
+   } else {
+      if((fp_out = fopen(DEFAULT_OUT_FILE, "wb")) == NULL) {
+         fprintf(stderr, "ERROR: Failed to open file '%s'\n", DEFAULT_OUT_FILE);
+         exit(EXIT_FAILURE);
+      }
    }
-   text = lexcal_analysis(fp);
+
+   /* get text */
+   text = lexcal_analysis(fp_in);
+   fclose(fp_in);
+
+   /* register symbol_table */
+   for(p = text; p->cmd_t != CMD_END; ++p) {
+      if(p->cmd_t == CMD_LBL) {
+         symbol_table[hash(p->param)] = p - text;
+      }
+   }
+   /* replace on symbol_table */
    for(p = text; p->cmd_t != CMD_END; ++p) {
       switch(p->cmd_t) {
       case CMD_PSH : printf("PSH"); break;
@@ -48,16 +65,20 @@ int main(int argc, char *argv[]) {
       default:
          break;
       }
-      if(p->cmd_t == CMD_LBL) {
-         symbol_table[hash(p->param)] = p - text;
-         printf("%5d -> %ld(%d)\n", p->param, p - text, hash(p->param));
-      } else if(REQUIRE_PARAM(p->cmd_t)) {
+      if(p->imp_t == IMP_FLOW_CTRL && REQUIRE_PARAM(p->cmd_t)) {
+         p->param = symbol_table[hash(p->param)];
+      }
+      if(REQUIRE_PARAM(p->cmd_t)) {
          printf(" %4d\n", p->param);
       } else {
          putchar('\n');
       }
-  }
-   fclose(fp);
+   }
+   for(p = text; p->cmd_t != CMD_END; ++p) {
+      fwrite(p, 1, sizeof(INSTRUCTION), fp_out);
+   }
+   fwrite(p, 1, sizeof(INSTRUCTION), fp_out);
+   fclose(fp_out);
    free(text);
    return 0;
 }
