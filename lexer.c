@@ -195,7 +195,22 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
       int param;
       imp_t = read_imp(fp);
       cmd_t = read_cmd(fp, imp_t);
-      switch(cmd_t) {
+      param = REQUIRE_PARAM(cmd_t)? read_param(fp): 0;
+      p->imp_t = imp_t;
+      p->cmd_t = cmd_t;
+      p->param = param;
+      if(imp_t == IMP_FLOW_CTRL && cmd_t == CMD_END) break;
+      ++p;
+   }
+   return text;
+}
+
+int main(int argc, char *argv[]) {
+   FILE *fp = fopen(argv[1], "rb");
+   INSTRUCTION *p, *text;
+   text = lexcal_analysis(fp);
+   for(p = text; p->cmd_t != CMD_END; ++p) {
+      switch(p->cmd_t) {
       case CMD_PSH : printf("PSH"); break;
       case CMD_DUP : printf("DUP"); break;
       case CMD_CPY : printf("CPY"); break;
@@ -221,23 +236,13 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
       case CMD_GCH : printf("GCH"); break;
       case CMD_GNM : printf("GNM"); break;
       }
-      if(REQUIRE_PARAM(cmd_t)) {
-         param = read_param(fp);
-         printf(" %4d\n", param);
+      if(REQUIRE_PARAM(p->cmd_t)) {
+         printf(" %4d\n", p->param);
       } else {
-         param = 0;
          putchar('\n');
       }
-
-      if(imp_t == IMP_FLOW_CTRL && cmd_t == CMD_END) break;
    }
-   return text;
-}
-
-int main(int argc, char *argv[]) {
-   FILE *fp = fopen(argv[1], "rb");
-   INSTRUCTION *text;
-   text = lexcal_analysis(fp);
+   puts("END");
    fclose(fp);
    free(text);
    return 0;
