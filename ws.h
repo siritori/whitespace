@@ -51,7 +51,7 @@ enum CMD_TYPE {
 };
 
 #define REQUIRE_PARAM(CMD) (\
-      CMD == CMD_PUT\
+      CMD == CMD_PSH\
    || CMD == CMD_CPY\
    || CMD == CMD_SLD\
    || CMD == CMD_LBL\
