@@ -16,6 +16,12 @@ int stack_dump(void) {
    }
    puts("-------");
 }
+int stack_peek(int n) {
+   return *(sp - n);
+}
+int stack_pop(void) {
+   return *(sp--);
+}
 void ws_psh(int num) {
    *(++sp) = num;
    return;
@@ -37,7 +43,7 @@ void ws_swp(void) {
    return;
 }
 void ws_dsc(void) {
-   --sp;
+   stack_pop();
    return;
 }
 void ws_sld(void) {
@@ -45,23 +51,32 @@ void ws_sld(void) {
    return;
 }
 void ws_add(void) {
-   int num = *(sp-1) + (*sp);
-   *(--sp) = num;
+   int a, b;
+   b = stack_pop();
+   a = stack_pop();
+   *(--sp) = a + b;
 }
 void ws_sub(void) {
-   int num = *(sp-1) - (*sp);
-   *(--sp) = num;
+   int a, b;
+   b = stack_pop();
+   a = stack_pop();
+   *(--sp) = a - b;
 }
 void ws_mul(void) {
-   int num = *(sp-1) * (*sp);
-   *(--sp) = num;
+   int a, b;
+   b = stack_pop();
+   a = stack_pop();
+   *(--sp) = a * b;
 }
 void ws_div(void) {
-   int num = *(sp-1) / (*sp);
-   *(--sp) = num;
+   int a, b;
+   b = stack_pop();
+   a = stack_pop();
+   *(--sp) = a / b;
 }
 void ws_mod(void) {
-   int num = *(sp-1) % (*sp);
-   *(--sp) = num;
+   int a, b;
+   b = stack_pop();
+   a = stack_pop();
+   *(--sp) = a % b;
 }
-

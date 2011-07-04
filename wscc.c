@@ -5,7 +5,7 @@
 int symbol_table[SYMBOL_TABLE_SIZE] = { -1 };
 
 int hash(int num) {
-   return (num * 171 + 5) % SYMBOL_TABLE_SIZE;
+   return ((unsigned)num * 3 + 5) % SYMBOL_TABLE_SIZE;
 }
 
 int main(int argc, char *argv[]) {
@@ -29,50 +29,23 @@ int main(int argc, char *argv[]) {
    /* get text */
    text = lexcal_analysis(fp_in);
    fclose(fp_in);
-
    /* register symbol_table */
-   for(p = text; p->cmd_t != CMD_END; ++p) {
+   for(p = text; p->imp_t != IMP_END; ++p) {
       if(p->cmd_t == CMD_LBL) {
+         printf("register : label%d(hash:%d) = %d\n", p->param, hash(p->param), p-text);
          symbol_table[hash(p->param)] = p - text;
       }
    }
    /* replace on symbol_table */
-   for(p = text; p->cmd_t != CMD_END; ++p) {
-//      switch(p->cmd_t) {
-//      case CMD_PSH : printf("PSH"); break;
-//      case CMD_DUP : printf("DUP"); break;
-//      case CMD_CPY : printf("CPY"); break;
-//      case CMD_SWP : printf("SWP"); break;
-//      case CMD_DSC : printf("DSC"); break;
-//      case CMD_SLD : printf("SLD"); break;
-//      case CMD_ADD : printf("ADD"); break;
-//      case CMD_SUB : printf("SUB"); break;
-//      case CMD_MUL : printf("MUL"); break;
-//      case CMD_DIV : printf("DIV"); break;
-//      case CMD_MOD : printf("MOD"); break;
-//      case CMD_PUT : printf("PUT"); break;
-//      case CMD_GET : printf("GET"); break;
-//      case CMD_JAL : printf("JAL"); break;
-//      case CMD_JMP : printf("JMP"); break;
-//      case CMD_JSZ : printf("JSZ"); break;
-//      case CMD_JSN : printf("JSN"); break;
-//      case CMD_RET : printf("RET"); break;
-//      case CMD_END : printf("END"); break;
-//      case CMD_PCH : printf("PCH"); break;
-//      case CMD_PNM : printf("PNM"); break;
-//      case CMD_GCH : printf("GCH"); break;
-//      case CMD_GNM : printf("GNM"); break;
-//      default:
-//         break;
-//      }
+   for(p = text; p->imp_t != IMP_END; ++p) {
       if(p->imp_t == IMP_FLOW_CTRL && REQUIRE_PARAM(p->cmd_t)) {
+         if(symbol_table[hash(p->param)] < 0) {
+            fprintf(stderr, "ERROR: undefind label %d\n", p->param);
+            exit(EXIT_FAILURE);
+         }
+         printf("replace: %d --> addr%d\n", p->param, symbol_table[hash(p->param)]);
          p->param = symbol_table[hash(p->param)];
       }
-//      if(REQUIRE_PARAM(p->cmd_t)) {
-//         printf(" %4d\n", p->param);
-//      } else {
-//         putchar('\n');
-//      }
    }
    for(p = text; p->cmd_t != CMD_END; ++p) {
       fwrite(p, 1, sizeof(INSTRUCTION), fp_out);
@@ -80,6 +53,7 @@ int main(int argc, char *argv[]) {
    fwrite(p, 1, sizeof(INSTRUCTION), fp_out);
    fclose(fp_out);
    free(text);
+   puts("done!");
    return 0;
 }
 

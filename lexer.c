@@ -3,14 +3,29 @@
 #include <limits.h>
 #include "ws.h"
 
+char next_ch(FILE *fp) {
+   char ch;
+   while(1) {
+      ch = fgetc(fp);
+      switch(ch) {
+      case ' ' :
+      case '\t':
+      case '\n':
+      case EOF:
+         return ch;
+      }
+   }
+}
+
 static enum IMP_TYPE read_imp(FILE *fp) {
    char ch;
-   ch = fgetc(fp);
+   if(feof(fp)) return IMP_END;
+   ch = next_ch(fp);
    switch(ch) {
    case ' ' : return IMP_STACK;
    case '\n': return IMP_FLOW_CTRL;
    case '\t':
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return IMP_ARITHMETIC;
       case '\t': return IMP_HEAP_ACCESS;
@@ -19,6 +34,8 @@ static enum IMP_TYPE read_imp(FILE *fp) {
          fprintf(stderr, "0SYNTAX ERROR: (in IMP)expected '\\t' or '\\n' or ' '\n");
          exit(EXIT_FAILURE);
       }
+   case EOF:
+      return IMP_END;
    default:
       fprintf(stderr, "1SYNTAX ERROR: (in IMP)expected '\\t' or '\\n' or ' '\n");
       exit(EXIT_FAILURE);
@@ -28,11 +45,11 @@ static enum IMP_TYPE read_imp(FILE *fp) {
 
 static enum CMD_TYPE read_stack_cmd(FILE *fp) {
    char ch;
-   ch = fgetc(fp);
+   ch = next_ch(fp);
    switch(ch) {
    case ' ' : return CMD_PSH;
    case '\t':
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return CMD_CPY;
       case '\n': return CMD_SLD;
@@ -41,7 +58,7 @@ static enum CMD_TYPE read_stack_cmd(FILE *fp) {
          exit(EXIT_FAILURE);
       }
    case '\n':
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return CMD_DUP;
       case '\n': return CMD_DSC;
@@ -58,10 +75,10 @@ static enum CMD_TYPE read_stack_cmd(FILE *fp) {
 
 static enum CMD_TYPE read_arithmetic_cmd(FILE *fp) {
    char ch;
-   ch = fgetc(fp);
+   ch = next_ch(fp);
    switch(ch) {
    case ' ' :
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return CMD_ADD;
       case '\t': return CMD_SUB;
@@ -71,7 +88,7 @@ static enum CMD_TYPE read_arithmetic_cmd(FILE *fp) {
          exit(EXIT_FAILURE);
       }
    case '\t':
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return CMD_DIV;
       case '\t': return CMD_MOD;
@@ -87,7 +104,7 @@ static enum CMD_TYPE read_arithmetic_cmd(FILE *fp) {
 
 static enum CMD_TYPE read_head_access_cmd(FILE *fp) {
    char ch;
-   ch = fgetc(fp);
+   ch = next_ch(fp);
    switch(ch) {
    case ' ' : return CMD_PUT;
    case '\t': return CMD_GET;
@@ -99,11 +116,10 @@ static enum CMD_TYPE read_head_access_cmd(FILE *fp) {
 
 static enum CMD_TYPE read_flow_ctrl_cmd(FILE *fp) {
    char ch;
-   ch = fgetc(fp);
+   ch = next_ch(fp);
    switch(ch) {
-   case '\n': return CMD_END;
    case '\t':
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return CMD_JSZ;
       case '\t': return CMD_JSN;
@@ -113,7 +129,7 @@ static enum CMD_TYPE read_flow_ctrl_cmd(FILE *fp) {
          exit(EXIT_FAILURE);
       }
    case ' ' :
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return CMD_LBL;
       case '\t': return CMD_JAL;
@@ -122,6 +138,9 @@ static enum CMD_TYPE read_flow_ctrl_cmd(FILE *fp) {
          fprintf(stderr, "10SYNTAX ERROR: (in CMD)expected ' ' or '\\n' or '\\t'\n");
          exit(EXIT_FAILURE);
       }
+   case '\n':
+      ch = next_ch(fp);
+      if(ch == '\n') return CMD_END;
    default:
       fprintf(stderr, "11 %02X(%02ld) SYNTAX ERROR: (in CMD)expected ' ' or '\\n' or '\\t'\n", ch, ftell(fp));
       exit(EXIT_FAILURE);
@@ -130,10 +149,10 @@ static enum CMD_TYPE read_flow_ctrl_cmd(FILE *fp) {
 
 static enum CMD_TYPE read_io_cmd(FILE *fp) {
    char ch;
-   ch = fgetc(fp);
+   ch = next_ch(fp);
    switch(ch) {
    case ' ' :
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return CMD_PCH;
       case '\t': return CMD_PNM;
@@ -142,7 +161,7 @@ static enum CMD_TYPE read_io_cmd(FILE *fp) {
          exit(EXIT_FAILURE);
       }
    case '\t':
-      ch = fgetc(fp);
+      ch = next_ch(fp);
       switch(ch) {
       case ' ' : return CMD_GCH;
       case '\t': return CMD_GNM;
@@ -172,8 +191,9 @@ static enum CMD_TYPE read_cmd(FILE *fp, const enum IMP_TYPE imp_t) {
 static int read_label(FILE *fp) {
    char ch;
    int ret = 0;
-   while((ch = fgetc(fp)) != '\n') {
-      ret = (ret * 3 + 31) + ((ch == '\t')? 2 : 5);
+   while((ch = next_ch(fp)) != '\n') {
+      ret = (unsigned)(ret * 3 + 7) + ((ch == '\t')? 2 : 5);
+      ret %= SYMBOL_TABLE_SIZE;
    }
    return ret;
 }
@@ -183,7 +203,7 @@ static int read_param(FILE *fp) {
    char ch;
    char temp[MAX_NUM_ARRAY_SIZE];
    for(i = 0; i < MAX_NUM_ARRAY_SIZE; ++i) {
-      if((ch = fgetc(fp)) == '\n') break;
+      if((ch = next_ch(fp)) == '\n') break;
       temp[i] = ch;
    }
    temp[i] = ch;
@@ -199,10 +219,15 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
    }
    p = text;
    while(1) {
+      char ch;
       enum IMP_TYPE imp_t;
       enum CMD_TYPE cmd_t;
       int param;
       imp_t = read_imp(fp);
+      if(imp_t == IMP_END) {
+         p->imp_t = imp_t;
+         break;
+      }
       cmd_t = read_cmd(fp, imp_t);
       if(REQUIRE_PARAM(cmd_t)) {
          param = (imp_t == IMP_FLOW_CTRL)? read_label(fp): read_param(fp);
@@ -212,68 +237,8 @@ INSTRUCTION* lexcal_analysis(FILE *fp) {
       p->imp_t = imp_t;
       p->cmd_t = cmd_t;
       p->param = param;
-      if(imp_t == IMP_FLOW_CTRL && cmd_t == CMD_END) break;
       ++p;
    }
    return text;
 }
-/*
-int main(int argc, char *argv[]) {
-   FILE *fp;
-   INSTRUCTION *p, *text;
-   if(argc < 2) {
-      fp = stdin;
-   } else {
-      if((fp = fopen(argv[1], "r")) == NULL) {
-         fprintf(stderr, "ERROR: Failed to open file '%s'\n", argv[1]);
-         exit(EXIT_FAILURE);
-      }
-   }
-   text = lexcal_analysis(fp);
-   for(p = text; p->cmd_t != CMD_END; ++p) {
-      switch(p->imp_t) {
-      case IMP_STACK       : printf("%16s ", "IMP_STACK");        break;
-      case IMP_ARITHMETIC  : printf("%16s ", "IMP_ARITHMETIC");   break;
-      case IMP_HEAP_ACCESS : printf("%16s ", "IMP_HEAP_ACCESS");  break;
-      case IMP_FLOW_CTRL   : printf("%16s ", "IMP_FLOW_CTRL");    break;
-      case IMP_IO          : printf("%16s ", "IMP_IO");           break;
-      }
-      switch(p->cmd_t) {
-      case CMD_PSH : printf("PSH"); break;
-      case CMD_DUP : printf("DUP"); break;
-      case CMD_CPY : printf("CPY"); break;
-      case CMD_SWP : printf("SWP"); break;
-      case CMD_DSC : printf("DSC"); break;
-      case CMD_SLD : printf("SLD"); break;
-      case CMD_ADD : printf("ADD"); break;
-      case CMD_SUB : printf("SUB"); break;
-      case CMD_MUL : printf("MUL"); break;
-      case CMD_DIV : printf("DIV"); break;
-      case CMD_MOD : printf("MOD"); break;
-      case CMD_PUT : printf("PUT"); break;
-      case CMD_GET : printf("GET"); break;
-      case CMD_LBL : printf("LBL"); break;
-      case CMD_JAL : printf("JAL"); break;
-      case CMD_JMP : printf("JMP"); break;
-      case CMD_JSZ : printf("JSZ"); break;
-      case CMD_JSN : printf("JSN"); break;
-      case CMD_RET : printf("RET"); break;
-      case CMD_END : printf("END"); break;
-      case CMD_PCH : printf("PCH"); break;
-      case CMD_PNM : printf("PNM"); break;
-      case CMD_GCH : printf("GCH"); break;
-      case CMD_GNM : printf("GNM"); break;
-      }
-      if(REQUIRE_PARAM(p->cmd_t)) {
-         printf(" %4d\n", p->param);
-      } else {
-         putchar('\n');
-      }
-   }
-   puts("END");
-   fclose(fp);
-   free(text);
-   return 0;
-}
-*/
 
