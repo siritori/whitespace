@@ -15,16 +15,6 @@ int get_num_instructions(const char *file_name) {
    return (int)(st.st_size / sizeof(INSTRUCTION));
 }
 
-void print_instruction(INSTRUCTION *p, int addr) {
-   printf("%4d %s ", addr, cmd2str(p->cmd_t));
-   if(REQUIRE_PARAM(p->cmd_t)) {
-      printf("%4d\n", p->param);
-   } else {
-      putchar('\n');
-   }
-   return;
-}
-
 int main(int argc, char *argv[]) {
    int i, text_size;
    unsigned file_size;
@@ -47,12 +37,12 @@ int main(int argc, char *argv[]) {
    }
    for(i = 0; i < text_size; ++i) {
       fread(&text[i], 1, sizeof(INSTRUCTION), fp);
-//      print_instruction(&text[i], i);
+      print_instruction(&text[i], i);
    }
    p = text;
-   while(p->cmd_t != CMD_END) {
+   while(p->imp_t != IMP_END) {
 //      stack_dump();
-      print_instruction(p, p-text);
+//      print_instruction(p, p-text);
       switch(p->cmd_t) {
       case CMD_PSH: ws_psh(p->param);  break;
       case CMD_DUP: ws_dup();          break;
@@ -70,19 +60,19 @@ int main(int argc, char *argv[]) {
       case CMD_LBL: break; // do nothing
       case CMD_JAL:
          *(prog_sp++) = p - text;
-         p = text + p->param;
+         p = &text[p->param];
          break;
       case CMD_JMP:
-         p = text + p->param;
+         p = &text[p->param];
          break;
       case CMD_JSZ:
-         if(stack_peek(0) == 0) p = text + p->param;
+         if(stack_pop() == 0) p = text + p->param;
          break;
       case CMD_JSN:
-         if(stack_peek(0) < 0) p = text + p->param;
+         if(stack_pop() < 0) p = text + p->param;
          break;
       case CMD_RET:
-         p = text + *(--prog_sp);
+         p = &text[*(--prog_sp)];
          break;
       case CMD_END:
          printf("end of the program.\n");

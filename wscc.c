@@ -47,7 +47,8 @@ int main(int argc, char *argv[]) {
          p->param = symbol_table[hash(p->param)];
       }
    }
-   for(p = text; p->cmd_t != CMD_END; ++p) {
+   for(p = text; p->imp_t != IMP_END; ++p) {
+      print_instruction(p, p-text);
       fwrite(p, 1, sizeof(INSTRUCTION), fp_out);
    }
    fwrite(p, 1, sizeof(INSTRUCTION), fp_out);

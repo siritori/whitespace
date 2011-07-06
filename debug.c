@@ -1,5 +1,15 @@
 #include "ws.h"
 
+void print_instruction(INSTRUCTION *p, int addr) {
+   printf("%4d %s ", addr, cmd2str(p->cmd_t));
+   if(REQUIRE_PARAM(p->cmd_t)) {
+      printf("%4d\n", p->param);
+   } else {
+      putchar('\n');
+   }
+   return;
+}
+
 char* imp2str(const enum IMP_TYPE imp_t) {
    switch(imp_t) {
       case IMP_STACK       : return "IMP_STACK";

@@ -8,13 +8,13 @@ static int stack[STACK_SIZE];
 static int *sp = &stack[0];
 
 int stack_dump(void) {
-   int *p = &stack[1];
-   puts("-------");
+   int *p = &stack[0];
+   printf("[");
    while(p <= sp) {
-      printf("%d\n", *p);
+      printf("%d,", *p);
       ++p;
    }
-   puts("-------");
+   puts("]");
 }
 int stack_peek(int n) {
    return *(sp - n);
@@ -54,29 +54,29 @@ void ws_add(void) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
-   *(--sp) = a + b;
+   ws_psh(a + b);
 }
 void ws_sub(void) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
-   *(--sp) = a - b;
+   ws_psh(a - b);
 }
 void ws_mul(void) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
-   *(--sp) = a * b;
+   ws_psh(a * b);
 }
 void ws_div(void) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
-   *(--sp) = a / b;
+   ws_psh(a / b);
 }
 void ws_mod(void) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
-   *(--sp) = a % b;
+   ws_psh(a % b);
 }

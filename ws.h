@@ -18,7 +18,8 @@ enum IMP_TYPE {
    IMP_ARITHMETIC,   // [Tab][Space]
    IMP_HEAP_ACCESS,  // [Tab][Tab]
    IMP_FLOW_CTRL,    // [LF]
-   IMP_IO            // [Tab][LF]
+   IMP_IO,           // [Tab][LF]
+   IMP_END           // input end
 };
 
 enum CMD_TYPE {
@@ -70,10 +71,35 @@ typedef struct __INSTRUCTION {
    int param;
 } INSTRUCTION;
 
+/* debug.c */
+void print_instruction(INSTRUCTION *p, int addr);
+char* imp2str(const enum IMP_TYPE imp_t);
+char* cmd2str(const enum CMD_TYPE cmd_t);
+
 /* num2space.c */
 char* num2space(const int num); // encoded WhiteSpace-style byte string
 int   space2num(const char *p); // decoded normal number
 
-//* lexer.c */
+/* stack.c */
+int stack_dump(void);
+int stack_peek(int n);
+int stack_pop(void);
+void ws_psh(int num);
+void ws_dup(void);
+void ws_cpy(int num);
+void ws_swp(void);
+void ws_dsc(void);
+void ws_sld(void);
+void ws_add(void);
+void ws_sub(void);
+void ws_mul(void);
+void ws_div(void);
+void ws_mod(void);
+
+/* heap.c */
+void ws_put(void);
+void ws_get(void);
+
+/* lexer.c */
 INSTRUCTION* lexcal_analysis(FILE *fp);
 
