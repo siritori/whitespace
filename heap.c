@@ -4,7 +4,7 @@
 #define HEAP_SIZE 2048
 static heap[HEAP_SIZE];
 
-void ws_put(void) {
+void ws_put(int _num) {
    int num, addr;
    num  = stack_pop();
    addr = stack_pop();
@@ -15,7 +15,7 @@ void ws_put(void) {
    }
    heap[addr] = num;
 }
-void ws_get(void) {
+void ws_get(int _num) {
    int addr = stack_pop();
 //   printf("heap[%d] => stack\n", addr);
    ws_psh(heap[addr]);

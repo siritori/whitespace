@@ -26,7 +26,7 @@ void ws_psh(int num) {
    *(++sp) = num;
    return;
 }
-void ws_dup(void) {
+void ws_dup(int _num) {
    ws_psh(*sp);
    return;
 }
@@ -35,46 +35,46 @@ void ws_cpy(int n) {
    num = *(sp - n);
    ws_psh(num);
 }
-void ws_swp(void) {
+void ws_swp(int _num) {
    int num;
    num = *(sp - 1);
    *(sp-1)  = *sp;
    *sp = num;
    return;
 }
-void ws_dsc(void) {
+void ws_dsc(int _num) {
    stack_pop();
    return;
 }
-void ws_sld(void) {
+void ws_sld(int _num) {
    // do nothing
    return;
 }
-void ws_add(void) {
+void ws_add(int _num) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
    ws_psh(a + b);
 }
-void ws_sub(void) {
+void ws_sub(int _num) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
    ws_psh(a - b);
 }
-void ws_mul(void) {
+void ws_mul(int _num) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
    ws_psh(a * b);
 }
-void ws_div(void) {
+void ws_div(int _num) {
    int a, b;
    b = stack_pop();
    a = stack_pop();
    ws_psh(a / b);
 }
-void ws_mod(void) {
+void ws_mod(int _num) {
    int a, b;
    b = stack_pop();
    a = stack_pop();

@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "ERROR: Failed to open file '%s'\n", argv[1]);
       exit(EXIT_FAILURE);
    }
-   text_size = get_num_instructions(argv[1]);
+   text_size = get_sizeof_instruction(argv[1]);
    if((text = (INSTRUCTION*)malloc(text_size)) == NULL) {
       fprintf(stderr, "FATAL ERROR: Failed to allocate memory.\n");
       exit(EXIT_FAILURE);
@@ -45,18 +45,18 @@ int main(int argc, char *argv[]) {
 //      print_instruction(p, p-text);
       switch(p->cmd_t) {
       case CMD_PSH: ws_psh(p->param);  break;
-      case CMD_DUP: ws_dup();          break;
+      case CMD_DUP: ws_dup(p->param);  break;
       case CMD_CPY: ws_cpy(p->param);  break;
-      case CMD_SWP: ws_swp();          break;
-      case CMD_DSC: ws_dsc();          break;
-      case CMD_SLD: ws_sld();          break;
-      case CMD_ADD: ws_add();          break;
-      case CMD_SUB: ws_sub();          break;
-      case CMD_MUL: ws_mul();          break;
-      case CMD_DIV: ws_div();          break;
-      case CMD_MOD: ws_mod();          break;
-      case CMD_PUT: ws_put();          break;
-      case CMD_GET: ws_get();          break;
+      case CMD_SWP: ws_swp(p->param);  break;
+      case CMD_DSC: ws_dsc(p->param);  break;
+      case CMD_SLD: ws_sld(p->param);  break;
+      case CMD_ADD: ws_add(p->param);  break;
+      case CMD_SUB: ws_sub(p->param);  break;
+      case CMD_MUL: ws_mul(p->param);  break;
+      case CMD_DIV: ws_div(p->param);  break;
+      case CMD_MOD: ws_mod(p->param);  break;
+      case CMD_PUT: ws_put(p->param);  break;
+      case CMD_GET: ws_get(p->param);  break;
       case CMD_LBL: break; // do nothing
       case CMD_JAL:
          *(prog_sp++) = p - text;
@@ -93,14 +93,14 @@ int main(int argc, char *argv[]) {
          char ch;
          ch = getchar();
          ws_psh(ch);
-         ws_put();
+         ws_put(DUMMY_ARG);
          break;
       }
       case CMD_GNM: {
          int num;
          scanf("%d", &num);
          ws_psh(num);
-         ws_put();
+         ws_put(DUMMY_ARG);
          break;
       }
       }

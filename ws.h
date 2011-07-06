@@ -5,6 +5,7 @@
 #define MAX_NUM_ARRAY_SIZE (sizeof(int) * CHAR_BIT)
 #define SYMBOL_TABLE_SIZE 4271 // prime
 #define DEFAULT_OUT_FILE "a.wb"
+#define DUMMY_ARG 0
 
 /*
    WhiteSpace Instruction format is this:
@@ -85,20 +86,20 @@ int stack_dump(void);
 int stack_peek(int n);
 int stack_pop(void);
 void ws_psh(int num);
-void ws_dup(void);
+void ws_dup(int _num);
 void ws_cpy(int num);
-void ws_swp(void);
-void ws_dsc(void);
-void ws_sld(void);
-void ws_add(void);
-void ws_sub(void);
-void ws_mul(void);
-void ws_div(void);
-void ws_mod(void);
+void ws_swp(int _num);
+void ws_dsc(int _num);
+void ws_sld(int _num);
+void ws_add(int _num);
+void ws_sub(int _num);
+void ws_mul(int _num);
+void ws_div(int _num);
+void ws_mod(int _num);
 
 /* heap.c */
-void ws_put(void);
-void ws_get(void);
+void ws_put(int _num);
+void ws_get(int _num);
 
 /* lexer.c */
 INSTRUCTION* lexcal_analysis(FILE *fp);
