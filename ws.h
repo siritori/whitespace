@@ -101,6 +101,12 @@ void ws_mod(int _num);
 void ws_put(int _num);
 void ws_get(int _num);
 
+/* io.c */
+void ws_pch(int _num);
+void ws_pnm(int _num);
+void ws_gch(int _num);
+void ws_gnm(int _num);
+
 /* lexer.c */
 INSTRUCTION* lexcal_analysis(FILE *fp);
 

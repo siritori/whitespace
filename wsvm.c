@@ -57,6 +57,10 @@ int main(int argc, char *argv[]) {
       case CMD_MOD: ws_mod(p->param);  break;
       case CMD_PUT: ws_put(p->param);  break;
       case CMD_GET: ws_get(p->param);  break;
+      case CMD_PCH: ws_pch(p->param);  break;
+      case CMD_PNM: ws_pnm(p->param);  break;
+      case CMD_GCH: ws_gch(p->param);  break;
+      case CMD_GNM: ws_gnm(p->param);  break;
       case CMD_LBL: break; // do nothing
       case CMD_JAL:
          *(prog_sp++) = p - text;
@@ -83,26 +87,6 @@ int main(int argc, char *argv[]) {
       case CMD_END:
          printf("end of the program.\n");
          goto END_OF_PROGRAM;
-      case CMD_PCH:
-         putchar(stack_pop());
-         break;
-      case CMD_PNM:
-         printf("%d", stack_pop());
-         break;
-      case CMD_GCH: {
-         char ch;
-         ch = getchar();
-         ws_psh(ch);
-         ws_put(DUMMY_ARG);
-         break;
-      }
-      case CMD_GNM: {
-         int num;
-         scanf("%d", &num);
-         ws_psh(num);
-         ws_put(DUMMY_ARG);
-         break;
-      }
       }
       ++p;
    }
