@@ -1,0 +1,17 @@
+# .SUBDIRS:
+# INCLUDES +=
+
+MAIN = wsvm
+
+CFILES[] =
+   debug
+   num2space
+   lexer
+   fun_stack
+   fun_heap_access
+   fun_io
+   fun_flow_ctrl
+   wsvm
+CC = gcc
+
+.DEFAULT:$(CProgram $(MAIN), $(CFILES))
