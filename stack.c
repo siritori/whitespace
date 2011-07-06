@@ -8,7 +8,7 @@ static int stack[STACK_SIZE];
 static int *sp = &stack[0];
 
 int stack_dump(void) {
-   int *p = &stack[0];
+   int *p = &stack[1];
    printf("[");
    while(p <= sp) {
       printf("%d,", *p);

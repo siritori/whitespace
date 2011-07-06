@@ -16,7 +16,7 @@ int get_num_instructions(const char *file_name) {
 }
 
 int main(int argc, char *argv[]) {
-   int i, text_size;
+   int i, text_size, num;
    unsigned file_size;
    INSTRUCTION *p, *text;
    FILE *fp;
@@ -37,10 +37,10 @@ int main(int argc, char *argv[]) {
    }
    for(i = 0; i < text_size; ++i) {
       fread(&text[i], 1, sizeof(INSTRUCTION), fp);
-      print_instruction(&text[i], i);
+//      print_instruction(&text[i], i);
    }
    p = text;
-   while(p->imp_t != IMP_END) {
+   while(1) {
 //      stack_dump();
 //      print_instruction(p, p-text);
       switch(p->cmd_t) {
@@ -66,10 +66,16 @@ int main(int argc, char *argv[]) {
          p = &text[p->param];
          break;
       case CMD_JSZ:
-         if(stack_pop() == 0) p = text + p->param;
+         num = stack_pop();
+         if(num == 0) {
+            p = &text[p->param];
+         }
          break;
       case CMD_JSN:
-         if(stack_pop() < 0) p = text + p->param;
+         num = stack_pop();
+         if(num < 0) {
+            p = &text[p->param];
+         }
          break;
       case CMD_RET:
          p = &text[*(--prog_sp)];
@@ -86,7 +92,6 @@ int main(int argc, char *argv[]) {
       case CMD_GCH: {
          char ch;
          ch = getchar();
-         ws_psh(p->param);
          ws_psh(ch);
          ws_put();
          break;
@@ -94,7 +99,6 @@ int main(int argc, char *argv[]) {
       case CMD_GNM: {
          int num;
          scanf("%d", &num);
-         ws_psh(p->param);
          ws_psh(num);
          ws_put();
          break;
