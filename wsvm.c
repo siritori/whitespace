@@ -9,7 +9,7 @@
 static int prog_stack[PROG_STACK_SIZE];
 static int *prog_sp = &prog_stack[0];
 
-int get_num_instructions(const char *file_name) {
+int get_sizeof_instruction(const char *file_name) {
    struct stat st;
    stat(file_name, &st);
    return (int)(st.st_size / sizeof(INSTRUCTION));
