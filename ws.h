@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define NUM_CMD 24
 #define DEFAULT_TEXT_SIZE 64
 #define MAX_NUM_ARRAY_SIZE (sizeof(int) * CHAR_BIT)
 #define SYMBOL_TABLE_SIZE 4271 // prime
@@ -106,6 +107,15 @@ void ws_pch(int _num);
 void ws_pnm(int _num);
 void ws_gch(int _num);
 void ws_gnm(int _num);
+
+/* flow_ctrl.c */
+void ws_lbl(int _label);
+void ws_jal(int label);
+void ws_jmp(int label);
+void ws_jsz(int label);
+void ws_jsn(int label);
+void ws_ret(int _label);
+void ws_end(int _label);
 
 /* lexer.c */
 INSTRUCTION* lexcal_analysis(FILE *fp);

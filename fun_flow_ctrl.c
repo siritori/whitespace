@@ -8,6 +8,10 @@ extern INSTRUCTION *text;
 static int stack[PROG_STACK_SIZE];
 static int *sp = &stack[0];
 
+void ws_lbl(int _label_) {
+   return; // do nothing
+}
+
 void ws_jal(int label) {
    *(sp++) = pp - text;
    pp = &text[label];
@@ -42,7 +46,9 @@ void ws_ret(int _label) {
 }
 
 void ws_end(int _label) {
+   puts("END OF PROGRAM");
    pp = NULL;
+   printf("pp = %p\n", pp);
    return;
 }
 
