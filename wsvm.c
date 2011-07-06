@@ -5,9 +5,9 @@
 #include <unistd.h>
 #include "ws.h"
 
-#define PROG_STACK_SIZE 512
-static int prog_stack[PROG_STACK_SIZE];
-static int *prog_sp = &prog_stack[0];
+/* NOTICE: These two pointers are used also flow_ctrl.c */
+INSTRUCTION *pp;     // Program Pointer
+INSTRUCTION *text;   // Text Data
 
 int get_sizeof_instruction(const char *file_name) {
    struct stat st;
@@ -18,7 +18,6 @@ int get_sizeof_instruction(const char *file_name) {
 int main(int argc, char *argv[]) {
    int i, text_size, num;
    unsigned file_size;
-   INSTRUCTION *p, *text;
    FILE *fp;
    /* arg is only two */
    if(argc != 2) {
@@ -37,58 +36,34 @@ int main(int argc, char *argv[]) {
    }
    for(i = 0; i < text_size; ++i) {
       fread(&text[i], 1, sizeof(INSTRUCTION), fp);
-//      print_instruction(&text[i], i);
    }
-   p = text;
-   while(1) {
+   for(pp = text; pp->cmd_t != CMD_END ; ++pp) {
 //      stack_dump();
 //      print_instruction(p, p-text);
-      switch(p->cmd_t) {
-      case CMD_PSH: ws_psh(p->param);  break;
-      case CMD_DUP: ws_dup(p->param);  break;
-      case CMD_CPY: ws_cpy(p->param);  break;
-      case CMD_SWP: ws_swp(p->param);  break;
-      case CMD_DSC: ws_dsc(p->param);  break;
-      case CMD_SLD: ws_sld(p->param);  break;
-      case CMD_ADD: ws_add(p->param);  break;
-      case CMD_SUB: ws_sub(p->param);  break;
-      case CMD_MUL: ws_mul(p->param);  break;
-      case CMD_DIV: ws_div(p->param);  break;
-      case CMD_MOD: ws_mod(p->param);  break;
-      case CMD_PUT: ws_put(p->param);  break;
-      case CMD_GET: ws_get(p->param);  break;
-      case CMD_PCH: ws_pch(p->param);  break;
-      case CMD_PNM: ws_pnm(p->param);  break;
-      case CMD_GCH: ws_gch(p->param);  break;
-      case CMD_GNM: ws_gnm(p->param);  break;
-      case CMD_LBL: break; // do nothing
-      case CMD_JAL:
-         *(prog_sp++) = p - text;
-         p = &text[p->param];
-         break;
-      case CMD_JMP:
-         p = &text[p->param];
-         break;
-      case CMD_JSZ:
-         num = stack_pop();
-         if(num == 0) {
-            p = &text[p->param];
-         }
-         break;
-      case CMD_JSN:
-         num = stack_pop();
-         if(num < 0) {
-            p = &text[p->param];
-         }
-         break;
-      case CMD_RET:
-         p = &text[*(--prog_sp)];
-         break;
-      case CMD_END:
-         printf("end of the program.\n");
-         goto END_OF_PROGRAM;
+      switch(pp->cmd_t) {
+      case CMD_PSH: ws_psh(pp->param);  break;
+      case CMD_DUP: ws_dup(pp->param);  break;
+      case CMD_CPY: ws_cpy(pp->param);  break;
+      case CMD_SWP: ws_swp(pp->param);  break;
+      case CMD_DSC: ws_dsc(pp->param);  break;
+      case CMD_SLD: ws_sld(pp->param);  break;
+      case CMD_ADD: ws_add(pp->param);  break;
+      case CMD_SUB: ws_sub(pp->param);  break;
+      case CMD_MUL: ws_mul(pp->param);  break;
+      case CMD_DIV: ws_div(pp->param);  break;
+      case CMD_MOD: ws_mod(pp->param);  break;
+      case CMD_PUT: ws_put(pp->param);  break;
+      case CMD_GET: ws_get(pp->param);  break;
+      case CMD_PCH: ws_pch(pp->param);  break;
+      case CMD_PNM: ws_pnm(pp->param);  break;
+      case CMD_GCH: ws_gch(pp->param);  break;
+      case CMD_GNM: ws_gnm(pp->param);  break;
+      case CMD_JAL: ws_jal(pp->param);  break;
+      case CMD_JMP: ws_jmp(pp->param);  break;
+      case CMD_JSZ: ws_jsz(pp->param);  break;
+      case CMD_JSN: ws_jsn(pp->param);  break;
+      case CMD_RET: ws_ret(pp->param);  break;
       }
-      ++p;
    }
 END_OF_PROGRAM:
    free(text);
