@@ -2,6 +2,7 @@
 # INCLUDES +=
 
 MAIN = wsvm
+CFLAGS = -Wall -O2
 
 CFILES[] =
    debug
