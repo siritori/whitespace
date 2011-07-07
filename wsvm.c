@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "ws.h"
 
-/* NOTICE: These two pointers are used also flow_ctrl.c */
+/* NOTICE: These two pointers are used also flow_ctrl.c and fun_stack.c*/
 INSTRUCTION *pp;     // Program Pointer
 INSTRUCTION *text;   // Text Data
 
@@ -68,6 +68,7 @@ int main(int argc, char *argv[]) {
    for(i = 0; i < text_size; ++i) {
       fread(&text[i], 1, sizeof(INSTRUCTION), fp);
    }
+   fclose(fp);
    /* init funtable */
    init_funtable();
    for(pp = text; pp->cmd_t != CMD_END ; ++pp) {
@@ -76,7 +77,6 @@ int main(int argc, char *argv[]) {
       (*funtable[pp->cmd_t])(pp->param);
    }
    free(text);
-   fclose(fp);
    return 0;
 }
 
