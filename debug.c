@@ -1,7 +1,11 @@
 #include "ws.h"
 
 void print_instruction(INSTRUCTION *p, int addr) {
-   printf("%4d %s ", addr, cmd2str(p->cmd_t));
+   if(p->cmd_t == CMD_LBL) {
+      printf("%04d\n", addr);
+      return;
+   }
+   printf("%04d %s ", addr, cmd2str(p->cmd_t));
    if(REQUIRE_PARAM(p->cmd_t)) {
       printf("%4d\n", p->param);
    } else {
