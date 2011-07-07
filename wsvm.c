@@ -45,8 +45,7 @@ int get_sizeof_instruction(const char *file_name) {
 }
 
 int main(int argc, char *argv[]) {
-   int i, text_size, num;
-   unsigned file_size;
+   int i, text_size;
    FILE *fp;
    /* arg is only two */
    if(argc != 2) {

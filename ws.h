@@ -83,7 +83,7 @@ char* num2space(const int num); // encoded WhiteSpace-style byte string
 int   space2num(const char *p); // decoded normal number
 
 /* stack.c */
-int stack_dump(void);
+void stack_dump(void);
 int stack_peek(int n);
 int stack_pop(void);
 void ws_psh(int num);

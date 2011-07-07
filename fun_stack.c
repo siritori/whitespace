@@ -10,7 +10,7 @@ extern INSTRUCTION *pp;
 static int stack[STACK_SIZE];
 static int *sp = &stack[0];
 
-int stack_dump(void) {
+void stack_dump(void) {
    int *p = &stack[1];
    printf("[");
    while(p <= sp) {
