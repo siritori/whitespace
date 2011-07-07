@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
    /* register symbol_table */
    for(p = text; p->imp_t != IMP_END; ++p) {
       if(p->cmd_t == CMD_LBL) {
-         printf("register : label%d(hash:%d) = %d\n", p->param, hash(p->param), p-text);
+         printf("register : label%d(hash:%d) = %ld\n", p->param, hash(p->param), p-text);
          symbol_table[hash(p->param)] = p - text;
       }
    }
