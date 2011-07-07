@@ -1,3 +1,6 @@
+.PHONY: clean
 .SUBDIRS: src
 CFLAGS += -Wall -O2
+clean:
+   rm src/*.o
 

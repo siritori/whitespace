@@ -1,0 +1,17 @@
+BIN = ../bin/
+
+.DEFAULT: $(BIN)wscc $(BIN)wsas $(BIN)ws_trans
+.PHONY: all
+
+all: $(BIN)wscc $(BIN)wsas $(BIN)ws_trans
+
+WSVM[] = wsvm num2space lexer fun_stack fun_heap_access fun_flow_ctrl fun_io
+WSCC[] = wscc debug lexer num2space
+WSAS[] = wsas
+WS_TRANS[] = ws_trans
+
+CProgram($(BIN)wsvm, $(WSVM))
+CProgram($(BIN)wscc, $(WSCC))
+CProgram($(BIN)wsas, $(WSAS))
+CProgram($(BIN)ws_trans, $(WS_TRANS))
+
