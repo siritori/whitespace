@@ -1,9 +1,9 @@
 BIN = ../bin/
 
-.DEFAULT: $(BIN)wscc $(BIN)wsas $(BIN)ws_trans
+.DEFAULT: $(BIN)wscc $(BIN)wsas $(BIN)ws_trans $(BIN)wsvm
 .PHONY: all
 
-all: $(BIN)wscc $(BIN)wsas $(BIN)ws_trans
+all: $(BIN)wscc $(BIN)wsas $(BIN)ws_trans $(BIN)wsvm
 
 WSVM[] = wsvm num2space lexer fun_stack fun_heap_access fun_flow_ctrl fun_io
 WSCC[] = wscc debug lexer num2space
