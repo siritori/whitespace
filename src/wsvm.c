@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "Usage: wsvm wb-file\n");
       exit(EXIT_FAILURE);
    }
-   /* open file */ 
+   /* open file */
    if((fp = fopen(argv[1], "rb")) == NULL) {
       fprintf(stderr, "ERROR: Failed to open file '%s'\n", argv[1]);
       exit(EXIT_FAILURE);
