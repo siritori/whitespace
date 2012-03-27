@@ -2,7 +2,8 @@ ws
 a.*
 *.o
 *.wb
-OMake*
+*.ws
 .*
-.gitignore
+bin/*
+*.omc
 

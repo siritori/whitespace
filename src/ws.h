@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define NUM_CMD 24
 #define DEFAULT_TEXT_SIZE 64
 #define MAX_NUM_ARRAY_SIZE (sizeof(int) * CHAR_BIT)
 #define SYMBOL_TABLE_SIZE 4271 // prime
 #define DEFAULT_OUT_FILE "a.wb"
+#define DUMMY_ARG 0
 
 /*
    WhiteSpace Instruction format is this:
@@ -18,7 +20,8 @@ enum IMP_TYPE {
    IMP_ARITHMETIC,   // [Tab][Space]
    IMP_HEAP_ACCESS,  // [Tab][Tab]
    IMP_FLOW_CTRL,    // [LF]
-   IMP_IO            // [Tab][LF]
+   IMP_IO,           // [Tab][LF]
+   IMP_END           // input end
 };
 
 enum CMD_TYPE {
@@ -70,10 +73,50 @@ typedef struct __INSTRUCTION {
    int param;
 } INSTRUCTION;
 
+/* debug.c */
+void print_instruction(INSTRUCTION *p, int addr);
+char* imp2str(const enum IMP_TYPE imp_t);
+char* cmd2str(const enum CMD_TYPE cmd_t);
+
 /* num2space.c */
 char* num2space(const int num); // encoded WhiteSpace-style byte string
 int   space2num(const char *p); // decoded normal number
 
-//* lexer.c */
+/* stack.c */
+void stack_dump(void);
+int stack_peek(int n);
+int stack_pop(void);
+void ws_psh(int num);
+void ws_dup(int _num);
+void ws_cpy(int num);
+void ws_swp(int _num);
+void ws_dsc(int _num);
+void ws_sld(int _num);
+void ws_add(int _num);
+void ws_sub(int _num);
+void ws_mul(int _num);
+void ws_div(int _num);
+void ws_mod(int _num);
+
+/* heap.c */
+void ws_put(int _num);
+void ws_get(int _num);
+
+/* io.c */
+void ws_pch(int _num);
+void ws_pnm(int _num);
+void ws_gch(int _num);
+void ws_gnm(int _num);
+
+/* flow_ctrl.c */
+void ws_lbl(int _label);
+void ws_jal(int label);
+void ws_jmp(int label);
+void ws_jsz(int label);
+void ws_jsn(int label);
+void ws_ret(int _label);
+void ws_end(int _label);
+
+/* lexer.c */
 INSTRUCTION* lexcal_analysis(FILE *fp);
 

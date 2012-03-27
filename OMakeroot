@@ -1,0 +1,10 @@
+# build for C project
+open build/C
+
+# The command-line variables are defined *after* the
+# standard configuration has been loaded.
+DefineCommandVars()
+
+# Include the OMakefile in this directory.
+.SUBDIRS: .
+

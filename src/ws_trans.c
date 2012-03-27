@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]) {
    char ch;
    FILE *fp;
-   
+
    /* Open file stream */
    if(argc < 2) { // no input file
       fp = stdin;
